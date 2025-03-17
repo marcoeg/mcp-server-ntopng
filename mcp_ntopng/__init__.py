@@ -44,6 +44,12 @@ from .mcp_server import (
     get_db_columns_info,
     get_flows_data,
     get_topk_flows,
+    get_user_alert_stats,
+    get_flow_device_stats,
+    get_flow_devices_stats,
+    get_sflow_device_stats,
+    get_sflow_devices_stats,
+    delete_user_alerts,
 )
 
 __all__ = [
@@ -92,4 +98,10 @@ __all__ = [
     "get_db_columns_info",
     "get_flows_data",
     "get_topk_flows",
+    "get_user_alert_stats",
+    "get_flow_device_stats",
+    "get_flow_devices_stats",
+    "get_sflow_device_stats",
+    "get_sflow_devices_stats",
+    "delete_user_alerts",
 ]

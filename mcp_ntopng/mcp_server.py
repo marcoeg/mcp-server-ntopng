@@ -1606,3 +1606,159 @@ def get_topk_flows(ifid: int, begin_time_clause: int, end_time_clause: int, sele
     response = requests.get(url, headers=HEADERS, params=params, verify=True)
     response.raise_for_status()
     return response.json()
+
+@mcp.tool(name="get ntopng user alert stats", description="Retrieve statistics for user alerts.")
+def get_user_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
+    """
+    Get user alert statistics.
+
+    Args:
+        ifid (int): Interface identifier.
+        epoch_begin (int): Start time (epoch).
+        epoch_end (int): End time (epoch).
+        alert_id (str): Alert identifier (e.g., 'id;eq').
+        severity (str): Severity identifier (e.g., 'id;eq').
+        score (str): Score filter (e.g., 'id;eq').
+
+    Returns:
+        Dict[str, Any]: JSON response with user alert stats.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/pro/rest/v2/get/user/alert/top.lua"
+    params = {
+        "ifid": ifid,
+        "epoch_begin": epoch_begin,
+        "epoch_end": epoch_end,
+        "alert_id": alert_id,
+        "severity": severity,
+        "score": score
+    }
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
+
+@mcp.tool(name="get ntopng flow device stats", description="Retrieve statistics for a specific flow device.")
+def get_flow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
+    """
+    Get flow device statistics.
+
+    Args:
+        ifid (int): Interface identifier.
+        ip (str): The IP address of the device.
+        ifIdx (int): The interface index.
+
+    Returns:
+        Dict[str, Any]: JSON response with flow device stats.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/pro/rest/v2/get/flowdevice/stats.lua"
+    params = {
+        "ifid": ifid,
+        "ip": ip,
+        "ifIdx": ifIdx
+    }
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
+
+@mcp.tool(name="get ntopng flow devices stats", description="Retrieve statistics for all flow devices.")
+def get_flow_devices_stats(ifid: int) -> Dict[str, Any]:
+    """
+    Get flow devices statistics.
+
+    Args:
+        ifid (int): Interface identifier.
+
+    Returns:
+        Dict[str, Any]: JSON response with flow devices stats.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/pro/rest/v2/get/flowdevices/stats.lua"
+    params = {"ifid": ifid}
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
+
+@mcp.tool(name="get ntopng sflow device stats", description="Retrieve statistics for a specific sFlow device.")
+def get_sflow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
+    """
+    Get sFlow device statistics.
+
+    Args:
+        ifid (int): Interface identifier.
+        ip (str): The IP address of the device.
+        ifIdx (int): The interface index.
+
+    Returns:
+        Dict[str, Any]: JSON response with sFlow device stats.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/pro/rest/v2/get/sflowdevice/stats.lua"
+    params = {
+        "ifid": ifid,
+        "ip": ip,
+        "ifIdx": ifIdx
+    }
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
+
+@mcp.tool(name="get ntopng sflow devices stats", description="Retrieve statistics for all sFlow devices.")
+def get_sflow_devices_stats(ifid: int) -> Dict[str, Any]:
+    """
+    Get sFlow devices statistics.
+
+    Args:
+        ifid (int): Interface identifier.
+
+    Returns:
+        Dict[str, Any]: JSON response with sFlow devices stats.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/pro/rest/v2/get/sflowdevices/stats.lua"
+    params = {"ifid": ifid}
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
+
+@mcp.tool(name="delete ntopng user alerts", description="Delete historical user alerts.")
+def delete_user_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
+    """
+    Delete historical user alerts.
+
+    Args:
+        ifid (int): Interface identifier.
+        epoch_begin (int): Start time (epoch).
+        epoch_end (int): End time (epoch).
+        alert_id (str): Alert identifier (e.g., 'id;eq').
+        severity (str): Severity identifier (e.g., 'id;eq').
+        score (str): Score filter (e.g., 'id;eq').
+
+    Returns:
+        Dict[str, Any]: JSON response indicating success or failure.
+
+    Raises:
+        requests.RequestException: If the request fails.
+    """
+    url = f"{BASE_URL}/lua/rest/v2/delete/user/alerts.lua"
+    params = {
+        "ifid": ifid,
+        "epoch_begin": epoch_begin,
+        "epoch_end": epoch_end,
+        "alert_id": alert_id,
+        "severity": severity,
+        "score": score
+    }
+    response = requests.get(url, headers=HEADERS, params=params, verify=True)
+    response.raise_for_status()
+    return response.json()
