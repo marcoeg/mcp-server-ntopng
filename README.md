@@ -36,7 +36,8 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
         "NTOPNG_SECURE": "true",
         "NTOPNG_VERIFY": "true",
         "NTOPNG_CONNECT_TIMEOUT": "30",
-        "NTOPNG_SEND_RECEIVE_TIMEOUT": "30"
+        "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
+        "NTOPNG_API_KEY": "your-ntopng-token"
       }
     }
   }
