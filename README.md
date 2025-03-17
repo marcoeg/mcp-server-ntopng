@@ -49,7 +49,7 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
 4. Restart Claude Desktop to apply the changes.
 
 
-## Development (ONLY OPYION until the module is registered with PyPI)
+## Development (ONLY OPTION until the module is registered with PyPI)
 
 1. Set the environmental variables either in the `claude_desktop_config.json` file or in a `.env` file in the root of the repository.
 
@@ -101,5 +101,5 @@ $ uv pip install -e .
 ```
 Run the MCP Inspector
 ```
-$ mcp dev main.py --with clickhouse-driver --with python-dotenv --with uvicorn --with pip-system-certs
+$ CLIENT_PORT=8077 SERVER_PORT=8078  mcp dev main.py --with clickhouse-driver --with python-dotenv --with uvicorn --with pip-system-certs
 ```

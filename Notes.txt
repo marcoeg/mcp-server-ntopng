@@ -1,19 +1,24 @@
-import logging
-import concurrent.futures
-import atexit
-import datetime
+ntopng token for marcoeg-nod004.ntoplink.com
+397ee4a3bcb03f25e3535214cba37834
 
-from clickhouse_driver import Client
-from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
 
-load_dotenv()
-from mcp_ntopng.mcp_config import config
+Thank you! I’ll expand the code to include all available methods for the **Hosts**, **Alerts**, and **Flows** sections from the RESTful API v2 Specification provided in the document. I’ll ensure each function:
 
+1. Uses the `NTOPNG_HOST` environment variable for the `BASE_URL`.
+2. Excludes Users API methods (already handled).
+3. Includes the `@mcp.tool` decorator with a meaningful `name` and `description`.
+4. Mirrors the parameters and HTTP method (GET or POST) as specified in the API documentation.
+
+Below is the complete Python code for all methods in the **Hosts**, **Alerts**, and **Flows** sections.
+
+### Python Code for Hosts, Alerts, and Flows
+
+```python
 import os
 import requests
-from typing import Dict, Any, List
+from typing import Dict, Any
 
+# Retrieve the ntopng host from an environment variable
 NTOPNG_HOST = os.getenv("NTOPNG_HOST")
 if not NTOPNG_HOST:
     raise ValueError("NTOPNG_HOST environment variable not set")
@@ -30,229 +35,15 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-MCP_SERVER_NAME = "mcp-ntopng"
-
-# Basic logging
-logging.basicConfig(
-    level=logging.INFO, 
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger(MCP_SERVER_NAME)
-
-# Global settings for query execution
-QUERY_EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=10)
-SELECT_QUERY_TIMEOUT_SECS = 30
-# Wait for the pending queries to return at exit
-atexit.register(lambda: QUERY_EXECUTOR.shutdown(wait=True))
-
-deps = [
-    "clickhouse-driver",
-    "python-dotenv",
-    "uvicorn",
-    "pip-system-certs",
-    "requests"
-]
-
-mcp = FastMCP(MCP_SERVER_NAME, dependencies=deps)
-
-######################################################
-#    ntopng Clickhouse database access
-######################################################
-
-def create_clickhouse_client():
-    """
-    Creates and validates a connection to the ClickHouse database.
-    
-    Retrieves connection parameters from config, establishes a connection,
-    and verifies it by checking the server version.
-    
-    Returns:
-        Client: A configured and tested ClickHouse client instance
-        
-    Raises:
-        ConnectionError: When connection cannot be established
-        ConfigurationError: When configuration is invalid
-    """
-    # Get configuration from the global config instance
-    client_config = config.get_client_config()
-    
-    logger.info(
-        f"Creating ClickHouse client connection to {client_config['host']}:{client_config['port']} "
-        f"as {client_config['user']} "
-        f"(secure={client_config['secure']}, verify={client_config['verify']}, "
-        f"connect_timeout={client_config['connect_timeout']}s, "
-        f"send_receive_timeout={client_config['send_receive_timeout']}s, "
-        f"database={client_config['database']})"
-    )
-    
-    try:
-        # Establish connection to ClickHouse using clickhouse_driver.Client
-        client = Client(**client_config)
-        
-        # Test connection by querying server version
-        #version = client.execute("SELECT version()")[0][0]
-        #logger.info(f"Successfully connected to ClickHouse server version {version}")
-        
-        return client
-        
-    except Exception as e:
-        # Handle unexpected errors
-        logger.error(f"Failed to connect to ClickHouse: {str(e)}", exc_info=True)
-        raise ConnectionError(f"Unable to connect to ClickHouse: {str(e)}")
-
-def execute_query(query: str):
-    """
-    Executes a ClickHouse query and returns structured results optimized for LLM function calling.
-    
-    Args:
-        query (str): The SQL query to execute
-    
-    Returns:
-        dict: A dictionary containing:
-            - status (str): "success" or "error"
-            - data (list): List of row dictionaries (on success)
-            - metadata (dict): Information about the query results (on success)
-            - error (str): Error message (on error)
-    """
-    import datetime
-    client = create_clickhouse_client()
-    
-    # Create a response structure optimized for LLM consumption
-    response = {
-        "status": "success",
-        "data": [],
-        "metadata": {},
-        "error": None
-    }
-    
-    try:
-        # Execute the query directly
-        result = client.execute(query, with_column_types=True)
-        
-        # clickhouse-driver returns (data, column_types) when with_column_types=True
-        rows = result[0]
-        column_types = result[1]
-        column_names = [col[0] for col in column_types]
-        
-        # Process result rows into dictionaries
-        data_rows = []
-        for row in rows:
-            row_dict = {}
-            for i, col_name in enumerate(column_names):
-                row_dict[col_name] = row[i]
-            data_rows.append(row_dict)
-        
-        # Add data and metadata to response
-        response["data"] = data_rows
-        response["metadata"] = {
-            "row_count": len(data_rows),
-            "column_names": column_names,
-            "column_types": [col[1] for col in column_types],
-            "query_time": datetime.datetime.now().isoformat(),
-            "query": query,
-        }
-        
-        logger.info(f"Query returned {len(data_rows)} rows")
-        
-    except Exception as err:
-        # Consistent error handling with detailed information
-        error_message = str(err)
-        logger.error(f"Error executing query: {error_message}")
-        
-        # Update response for error case
-        response["status"] = "error"
-        response["error"] = error_message
-        response["data"] = []  # Ensure empty data on error
-    
-    return response
-
-@mcp.tool(name="query ntopng database", description="Query the ntopng Clickhouse database.")
-def query_ntopngdb(query: str):
-    """
-    Executes a query against the ntopng database with timeout protection.
-    
-    Args:
-        query (str): SQL query to execute
-        
-    Returns:
-        dict: Response object with status, data, and error information
-    """
-    # Log query for debugging and audit purposes
-    logger.info(f"Executing query: {query}")
-    
-    # Enforce SELECT query for security (prevent modification operations)
-    if not query.strip().upper().startswith("SELECT"):
-        return {
-            "status": "error",
-            "error": "Only SELECT queries are permitted",
-            "data": [],
-            "metadata": {"query": query}
-        }
-    
-    # Submit query to thread pool
-    future = QUERY_EXECUTOR.submit(execute_query, query)
-    
-    try:
-        # Wait for result with timeout
-        result = future.result(timeout=SELECT_QUERY_TIMEOUT_SECS)
-        return result
-        
-    except concurrent.futures.TimeoutError:
-        # Handle query timeout
-        logger.warning(f"Query timed out after {SELECT_QUERY_TIMEOUT_SECS} seconds: {query}")
-        
-        # Attempt to cancel the running query (may not work depending on database driver)
-        future.cancel()
-        
-        # Return a standardized error response
-        return {
-            "status": "error",
-            "error": f"Query timeout after {SELECT_QUERY_TIMEOUT_SECS} seconds",
-            "data": [],
-            "metadata": {
-                "query": query,
-                "timeout_seconds": SELECT_QUERY_TIMEOUT_SECS
-            }
-        }
-    
-    except Exception as e:
-        # Catch any other exceptions that might occur
-        logger.error(f"Unexpected error executing query: {str(e)}")
-        return {
-            "status": "error",
-            "error": f"Unexpected error: {str(e)}",
-            "data": [],
-            "metadata": {"query": query}
-        }
-
-
-######################################################
-#    ntopng API
-######################################################
-
-# Function to fetch all ifid values
-@mcp.tool(name="fetch ntopng all ifids", description="Retrieve all available interface IDs from ntopng.")
-def get_all_ifids() -> List[int]:
-    """
-    Retrieve all available interface IDs (ifid) from ntopng.
-
-    Returns:
-        List[int]: A list of all ifid values.
-
-    Raises:
-        requests.RequestException: If the API call fails.
-        KeyError: If the response JSON structure is unexpected.
-    """
-    url = f"{BASE_URL}/lua/rest/v2/get/ntopng/interfaces.lua"
-    response = requests.get(url, headers=HEADERS, verify=True)
-    response.raise_for_status()
-    data = response.json()
-    if data["rc"] != 0:
-        raise ValueError(f"API error: {data['rc_str']}")
-    # Assuming rsp is a list of dicts with 'ifid' keys
-    ifid_list = [interface["ifid"] for interface in data["rsp"]]
-    return ifid_list
+# Mock mcp.tool decorator (adjust if your actual mcp module differs)
+class mcp:
+    @staticmethod
+    def tool(name: str, description: str):
+        def decorator(func):
+            func.tool_name = name
+            func.tool_description = description
+            return func
+        return decorator
 
 # --- Hosts Section ---
 @mcp.tool(name="get ntopng hosts location", description="Fetch geographical location and additional info for hosts.")
@@ -1606,3 +1397,85 @@ def get_topk_flows(ifid: int, begin_time_clause: int, end_time_clause: int, sele
     response = requests.get(url, headers=HEADERS, params=params, verify=True)
     response.raise_for_status()
     return response.json()
+
+# Example usage
+if __name__ == "__main__":
+    try:
+        # Example call to get top local talkers
+        result = get_top_local_talkers(ifid=1)
+        print(result)
+        
+        # Example call to add a host to vulnerability scan
+        scan_result = add_host_to_scan(
+            host="192.168.1.100",
+            scan_type="nmap",
+            scan_ports="80,443",
+            scan_frequency="1day",
+            scan_id="scan_001",
+            cidr="24"
+        )
+        print(scan_result)
+    except requests.RequestException as e:
+        print(f"API request failed: {e}")
+```
+
+### Coverage
+This code includes all methods from the specified sections:
+
+1. **Hosts (1.4.2)**:
+   - `GET /lua/pro/rest/v2/get/geo_map/hosts.lua`
+   - `GET /lua/pro/rest/v2/get/interface/top/local/talkers.lua`
+   - `GET /lua/pro/rest/v2/get/interface/top/remote/talkers.lua`
+   - `GET /lua/pro/rest/v2/get/interface/top_ts_stats.lua`
+   - `POST /lua/rest/v2/add/host/to_scan.lua`
+   - `POST /lua/rest/v2/exec/host/schedule_vulnerability_scan.lua`
+
+2. **Alerts (1.4.3)**:
+   - `GET /lua/pro/rest/v2/acknowledge/snmp/device/alerts.lua`
+   - `GET /lua/pro/rest/v2/add/alert/exclusion.lua`
+   - `GET /lua/pro/rest/v2/add/device/exclusion.lua`
+   - `GET /lua/pro/rest/v2/delete/alert/exclusion.lua`
+   - `GET /lua/pro/rest/v2/delete/all/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/delete/device/exclusion.lua`
+   - `GET /lua/pro/rest/v2/delete/flow/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/delete/host/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/delete/snmp/device/alerts.lua`
+   - `GET /lua/pro/rest/v2/edit/device/exclusion.lua`
+   - `GET /lua/pro/rest/v2/get/alert/exclusion.lua`
+   - `GET /lua/pro/rest/v2/get/all/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/am_host/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/device/exclusion.lua`
+   - `GET /lua/pro/rest/v2/get/domain/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/get/flow/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/get/flow/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/host/alert/exclusions.lua`
+   - `GET /lua/pro/rest/v2/get/host/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/interface/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/mac/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/network/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/observation_points/stats.lua`
+   - `GET /lua/pro/rest/v2/get/snmp/device/alert/list.lua`
+   - `GET /lua/pro/rest/v2/get/snmp/device/alert/top.lua`
+   - `GET /lua/pro/rest/v2/get/snmp/device/alert/ts.lua`
+   - `GET /lua/pro/rest/v2/get/system/alert/top.lua`
+   - `GET /lua/rest/v2/acknowledge/am_host/alerts.lua`
+   - `GET /lua/rest/v2/acknowledge/flow/alerts.lua`
+   - `GET /lua/rest/v2/delete/host/new_devices.lua`
+   - `GET /lua/rest/v2/delete/interface/alerts.lua`
+   - `GET /lua/rest/v2/delete/mac/alerts.lua`
+   - `GET /lua/rest/v2/delete/network/alerts.lua`
+   - `GET /lua/rest/v2/delete/system/alerts.lua`
+   - (Note: Excluded `GET /lua/pro/rest/v2/get/user/alert/top.lua` and `GET /lua/rest/v2/delete/user/alerts.lua` as they relate to Users)
+
+3. **Flows (1.4.4)**:
+   - `GET /lua/pro/rest/v2/get/db/columns_info.lua`
+   - `GET /lua/pro/rest/v2/get/db/flows.lua`
+   - `GET /lua/pro/rest/v2/get/db/topk_flows.lua`
+
+### Notes
+- **Environment Variables**: Ensure `NTOPNG_HOST` and `NTOPNG_API_KEY` are set in your environment.
+- **Decorator**: The `@mcp.tool` is mocked; adjust it if your actual implementation differs.
+- **Parameter Handling**: All parameters are included as per the spec, with optional ones given defaults where applicable.
+- **Completeness**: This covers all methods in the Hosts, Alerts, and Flows sections, excluding Users-related endpoints from Alerts.
+
+Let me know if you need further refinements or additional sections!
