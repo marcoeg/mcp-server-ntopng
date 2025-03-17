@@ -101,5 +101,7 @@ $ uv pip install -e .
 ```
 Run the MCP Inspector
 ```
+$ cd mcp_ntopng
+$ source .env
 $ CLIENT_PORT=8077 SERVER_PORT=8078  mcp dev main.py --with clickhouse-driver --with python-dotenv --with uvicorn --with pip-system-certs
 ```
