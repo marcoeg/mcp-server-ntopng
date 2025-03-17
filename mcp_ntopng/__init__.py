@@ -1,5 +1,6 @@
 from .mcp_server import (
     query_ntopngdb,
+    list_tables,
     get_all_ifids,
     get_hosts_location,
     get_top_local_talkers,
@@ -54,6 +55,7 @@ from .mcp_server import (
 
 __all__ = [
     "query_ntopngdb",
+    "list_tables",
     "get_all_ifids",
     "get_hosts_location",
     "get_top_local_talkers",

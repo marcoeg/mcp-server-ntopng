@@ -12,7 +12,7 @@ from mcp_ntopng.mcp_config import config
 
 import os
 import requests
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Sequence
 
 NTOPNG_HOST = os.getenv("NTOPNG_HOST")
 if not NTOPNG_HOST:
@@ -166,6 +166,74 @@ def execute_query(query: str):
         response["data"] = []  # Ensure empty data on error
     
     return response
+
+
+@mcp.tool("list_tables_ntopng_database", description="List tables structure of the ntopng database")
+def list_tables(): #database: str = "ntopng", like: str = None):
+    database = "ntopng"
+    logger.info(f"Listing tables in database '{database}'")
+
+    client = create_clickhouse_client()
+    
+    # Get all table comments in one query
+    table_comments_query = f"SELECT name, comment FROM system.tables WHERE database = '{database}'"
+    table_comments_result = client.execute(table_comments_query)
+    table_comments = {row[0]: row[1] for row in table_comments_result}
+
+    # Get all column comments in one query
+    column_comments_query = f"SELECT table, name, comment FROM system.columns WHERE database = '{database}'"
+    column_comments_result = client.execute(column_comments_query)
+    column_comments = {}
+    for row in column_comments_result:
+        table, col_name, comment = row
+        if table not in column_comments:
+            column_comments[table] = {}
+        column_comments[table][col_name] = comment
+
+    def get_table_info(table):
+        logger.info(f"Getting schema info for table {database}.{table}")
+        schema_query = f"DESCRIBE TABLE `{database}`.`{table}`"
+        schema_result = client.execute(schema_query, with_column_types=True)
+        
+        rows = schema_result[0]
+        column_types = schema_result[1]
+        column_names = [col[0] for col in column_types]
+
+        columns = []
+        for row in rows:
+            column_dict = {}
+            for i, col_name in enumerate(column_names):
+                column_dict[col_name] = row[i]
+            # Add comment from our pre-fetched comments
+            if table in column_comments and column_dict['name'] in column_comments[table]:
+                column_dict['comment'] = column_comments[table][column_dict['name']]
+            else:
+                column_dict['comment'] = None
+            columns.append(column_dict)
+
+        create_table_query = f"SHOW CREATE TABLE `{database}`.`{table}`"
+        create_table_result = client.execute(create_table_query)
+
+        return {
+            "database": database,
+            "name": table,
+            "comment": table_comments.get(table),
+            "columns": columns,
+            "create_table_query": create_table_result[0][0] if create_table_result else None,
+        }
+
+    # Get the list of tables
+    query = f"SHOW TABLES FROM {database}"
+    result = client.execute(query)
+    
+    tables = []
+    for row in result:
+        # Extract the table name from the row (assuming it's the first column)
+        table_name = row[0]
+        tables.append(get_table_info(table_name))
+
+    logger.info(f"Found {len(tables)} tables")
+    return tables
 
 @mcp.tool(name="query_ntopng_database", description="Query the ntopng Clickhouse database.")
 def query_ntopngdb(query: str):
