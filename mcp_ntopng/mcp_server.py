@@ -167,7 +167,7 @@ def execute_query(query: str):
     
     return response
 
-@mcp.tool(name="query ntopng database", description="Query the ntopng Clickhouse database.")
+@mcp.tool(name="query_ntopng_database", description="Query the ntopng Clickhouse database.")
 def query_ntopngdb(query: str):
     """
     Executes a query against the ntopng database with timeout protection.
@@ -232,7 +232,7 @@ def query_ntopngdb(query: str):
 ######################################################
 
 # Function to fetch all ifid values
-@mcp.tool(name="fetch ntopng all ifids", description="Retrieve all available interface IDs from ntopng.")
+@mcp.tool(name="fetch_ntopng_all_ifids", description="Retrieve all available interface IDs from ntopng.")
 def get_all_ifids() -> List[int]:
     """
     Retrieve all available interface IDs (ifid) from ntopng.
@@ -255,7 +255,7 @@ def get_all_ifids() -> List[int]:
     return ifid_list
 
 # --- Hosts Section ---
-@mcp.tool(name="get ntopng hosts location", description="Fetch geographical location and additional info for hosts.")
+@mcp.tool(name="get_ntopng_hosts_location", description="Fetch geographical location and additional info for hosts.")
 def get_hosts_location(ifid: int) -> Dict[str, Any]:
     """
     Fetch the location and additional information of hosts.
@@ -275,7 +275,7 @@ def get_hosts_location(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="fetch ntopng top local talkers", description="Retrieve the top 10 local talkers for a specified interface.")
+@mcp.tool(name="fetch_ntopng_top_local_talkers", description="Retrieve the top 10 local talkers for a specified interface.")
 def get_top_local_talkers(ifid: int) -> Dict[str, Any]:
     """
     Get the top 10 local talkers for a specified interface.
@@ -295,7 +295,7 @@ def get_top_local_talkers(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="fetch ntopng top remote talkers", description="Retrieve the top 10 remote talkers for a specified interface.")
+@mcp.tool(name="fetch_ntopng_top_remote_talkers", description="Retrieve the top 10 remote talkers for a specified interface.")
 def get_top_remote_talkers(ifid: int) -> Dict[str, Any]:
     """
     Get the top 10 remote talkers for a specified interface.
@@ -315,7 +315,7 @@ def get_top_remote_talkers(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng top timeseries stats", description="Retrieve top timeseries statistics for an interface.")
+@mcp.tool(name="get_ntopng_top_timeseries_stats", description="Retrieve top timeseries statistics for an interface.")
 def get_top_ts_stats(ifid: int, epoch_begin: int, epoch_end: int, ts_query: str, detail_view: str) -> Dict[str, Any]:
     """
     Get the top timeseries statistics.
@@ -345,7 +345,7 @@ def get_top_ts_stats(ifid: int, epoch_begin: int, epoch_end: int, ts_query: str,
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="add ntopng host to scan", description="Add a host to the ntopng vulnerability scan list.")
+@mcp.tool(name="add_ntopng_host_to_scan", description="Add a host to the ntopng vulnerability scan list.")
 def add_host_to_scan(host: str, scan_type: str, scan_ports: str, scan_frequency: str, scan_id: str, cidr: str) -> Dict[str, Any]:
     """
     Add a host to the vulnerability scan list.
@@ -377,7 +377,7 @@ def add_host_to_scan(host: str, scan_type: str, scan_ports: str, scan_frequency:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="schedule ntopng host vulnerability scan", description="Schedule or delete a host from the vulnerability scan list.")
+@mcp.tool(name="schedule_ntopng_host_vulnerability_scan", description="Schedule or delete a host from the vulnerability scan list.")
 def schedule_vulnerability_scan(host: str, scan_type: str, scan_ports: str, scan_single_host: bool) -> Dict[str, Any]:
     """
     Schedule or delete a host from the vulnerability scan list.
@@ -406,7 +406,7 @@ def schedule_vulnerability_scan(host: str, scan_type: str, scan_ports: str, scan
     return response.json()
 
 # --- Alerts Section ---
-@mcp.tool(name="acknowledge ntopng snmp alerts", description="Acknowledge historical SNMP device alerts in ntopng.")
+@mcp.tool(name="acknowledge_ntopng_snmp_alerts", description="Acknowledge historical SNMP device alerts in ntopng.")
 def acknowledge_snmp_device_alerts(ifid: int, label: str, alert_id: str, row_id: int, epoch_begin: int, epoch_end: int, 
                                    severity: str, score: str, ip: str, snmp_interface: str) -> Dict[str, Any]:
     """
@@ -447,7 +447,7 @@ def acknowledge_snmp_device_alerts(ifid: int, label: str, alert_id: str, row_id:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="add ntopng alert exclusion", description="Add an alert exclusion rule in ntopng.")
+@mcp.tool(name="add_ntopng_alert_exclusion", description="Add an alert exclusion rule in ntopng.")
 def add_alert_exclusion(type: str, alert_addr: str, alert_domain: str, alert_certificate: str, subdir: str, 
                         flow_alert_key: str, host_alert_key: str, delete_alerts: bool) -> Dict[str, Any]:
     """
@@ -484,7 +484,7 @@ def add_alert_exclusion(type: str, alert_addr: str, alert_domain: str, alert_cer
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="add ntopng device exclusion", description="Add a device to exclude from MAC tracking in ntopng.")
+@mcp.tool(name="add_ntopng_device_exclusion", description="Add a device to exclude from MAC tracking in ntopng.")
 def add_device_exclusion(ifid: int, mac_list: str, trigger_alerts: bool) -> Dict[str, Any]:
     """
     Add a device to exclude from MAC tracking.
@@ -506,7 +506,7 @@ def add_device_exclusion(ifid: int, mac_list: str, trigger_alerts: bool) -> Dict
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng alert exclusion", description="Delete an alert exclusion rule in ntopng.")
+@mcp.tool(name="delete_ntopng_alert_exclusion", description="Delete an alert exclusion rule in ntopng.")
 def delete_alert_exclusion(type: str, alert_addr: str, alert_domain: str, alert_certificate: str, subdir: str, 
                           flow_alert_key: str, host_alert_key: str) -> Dict[str, Any]:
     """
@@ -541,7 +541,7 @@ def delete_alert_exclusion(type: str, alert_addr: str, alert_domain: str, alert_
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng all alert exclusions", description="Delete all configured host or flow alert exclusions for a host.")
+@mcp.tool(name="delete_ntopng_all_alert_exclusions", description="Delete all configured host or flow alert exclusions for a host.")
 def delete_all_alert_exclusions(type: str, host: str) -> Dict[str, Any]:
     """
     Delete all configured host or flow alert exclusions for a specific host.
@@ -562,7 +562,7 @@ def delete_all_alert_exclusions(type: str, host: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng device exclusion", description="Remove a device from the MAC tracking exclusion list.")
+@mcp.tool(name="delete_ntopng_device_exclusion", description="Remove a device from the MAC tracking exclusion list.")
 def delete_device_exclusion(ifid: int, device: str) -> Dict[str, Any]:
     """
     Remove a device from the MAC tracking exclusion list.
@@ -583,7 +583,7 @@ def delete_device_exclusion(ifid: int, device: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng flow alert exclusions", description="Delete flow alert exclusions for a host.")
+@mcp.tool(name="delete_ntopng_flow_alert_exclusions", description="Delete flow alert exclusions for a host.")
 def delete_flow_alert_exclusions(alert_addr: str, alert_key: int) -> Dict[str, Any]:
     """
     Delete flow alert exclusions.
@@ -604,7 +604,7 @@ def delete_flow_alert_exclusions(alert_addr: str, alert_key: int) -> Dict[str, A
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng host alert exclusions", description="Delete host alert exclusions for a host.")
+@mcp.tool(name="delete_ntopng_host_alert_exclusions", description="Delete host alert exclusions for a host.")
 def delete_host_alert_exclusions(alert_addr: str, alert_key: int) -> Dict[str, Any]:
     """
     Delete host alert exclusions.
@@ -625,7 +625,7 @@ def delete_host_alert_exclusions(alert_addr: str, alert_key: int) -> Dict[str, A
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng snmp device alerts", description="Delete historical SNMP device alerts.")
+@mcp.tool(name="delete_ntopng_snmp_device_alerts", description="Delete historical SNMP device alerts.")
 def delete_snmp_device_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                              score: str, ip: str, snmp_interface: str) -> Dict[str, Any]:
     """
@@ -662,7 +662,7 @@ def delete_snmp_device_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="edit ntopng device exclusion", description="Edit a device in the MAC tracking exclusion list.")
+@mcp.tool(name="edit_ntopng_device_exclusion", description="Edit a device in the MAC tracking exclusion list.")
 def edit_device_exclusion(ifid: int, mac: str, mac_alias: str, mac_status: str, trigger_alerts: bool) -> Dict[str, Any]:
     """
     Edit a device in the MAC tracking exclusion list.
@@ -692,7 +692,7 @@ def edit_device_exclusion(ifid: int, mac: str, mac_alias: str, mac_status: str, 
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng alert exclusions", description="Retrieve all available alert exclusions.")
+@mcp.tool(name="get_ntopng_alert_exclusions", description="Retrieve all available alert exclusions.")
 def get_alert_exclusions(type: str) -> Dict[str, Any]:
     """
     Get all available alert exclusions.
@@ -712,7 +712,7 @@ def get_alert_exclusions(type: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng all alert stats", description="Retrieve statistics for all alerts.")
+@mcp.tool(name="get_ntopng_all_alert_stats", description="Retrieve statistics for all alerts.")
 def get_all_alert_stats(ifid: int, epoch_begin: int, epoch_end: int) -> Dict[str, Any]:
     """
     Get all alert statistics.
@@ -734,7 +734,7 @@ def get_all_alert_stats(ifid: int, epoch_begin: int, epoch_end: int) -> Dict[str
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng active monitoring alert stats", description="Retrieve alert statistics for active monitoring.")
+@mcp.tool(name="get_ntopng_active_monitoring_alert_stats", description="Retrieve alert statistics for active monitoring.")
 def get_am_host_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Get active monitoring alert statistics.
@@ -766,7 +766,7 @@ def get_am_host_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_i
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng excluded devices", description="Retrieve the list of devices excluded from MAC tracking.")
+@mcp.tool(name="get_ntopng_excluded_devices", description="Retrieve the list of devices excluded from MAC tracking.")
 def get_device_exclusions(ifid: int) -> Dict[str, Any]:
     """
     Retrieve the list of excluded devices from MAC tracking.
@@ -786,7 +786,7 @@ def get_device_exclusions(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng domain alert exclusions", description="Retrieve domain alert exclusions.")
+@mcp.tool(name="get_ntopng_domain_alert_exclusions", description="Retrieve domain alert exclusions.")
 def get_domain_alert_exclusions() -> Dict[str, Any]:
     """
     Get domain alert exclusions.
@@ -802,7 +802,7 @@ def get_domain_alert_exclusions() -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng flow alert exclusions", description="Retrieve flow alert exclusions for a host.")
+@mcp.tool(name="get_ntopng_flow_alert_exclusions", description="Retrieve flow alert exclusions for a host.")
 def get_flow_alert_exclusions(host: str) -> Dict[str, Any]:
     """
     Get flow alert exclusions.
@@ -822,7 +822,7 @@ def get_flow_alert_exclusions(host: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng flow alert stats", description="Retrieve statistics for flow alerts.")
+@mcp.tool(name="get_ntopng_flow_alert_stats", description="Retrieve statistics for flow alerts.")
 def get_flow_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str, 
                          ip_version: str, ip: str, cli_ip: str, srv_ip: str, cli_name: str, srv_name: str, 
                          cli_port: str, srv_port: str, vlan_id: str, l7proto: str, cli_country: str, 
@@ -905,7 +905,7 @@ def get_flow_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: 
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng host alert exclusions", description="Retrieve host alert exclusions for a host.")
+@mcp.tool(name="get_ntopng_host_alert_exclusions", description="Retrieve host alert exclusions for a host.")
 def get_host_alert_exclusions(host: str) -> Dict[str, Any]:
     """
     Get host alert exclusions.
@@ -925,7 +925,7 @@ def get_host_alert_exclusions(host: str) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng host alert stats", description="Retrieve statistics for host alerts.")
+@mcp.tool(name="get_ntopng_host_alert_stats", description="Retrieve statistics for host alerts.")
 def get_host_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str, 
                          vlan_id: str, ip_version: str, ip: str, name: str, host_pool_id: str, network: str) -> Dict[str, Any]:
     """
@@ -970,7 +970,7 @@ def get_host_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: 
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng interface alert stats", description="Retrieve statistics for interface alerts.")
+@mcp.tool(name="get_ntopng_interface_alert_stats", description="Retrieve statistics for interface alerts.")
 def get_interface_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                               score: str, subtype: str) -> Dict[str, Any]:
     """
@@ -1005,7 +1005,7 @@ def get_interface_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng mac alert stats", description="Retrieve statistics for MAC alerts.")
+@mcp.tool(name="get_ntopng_mac_alert_stats", description="Retrieve statistics for MAC alerts.")
 def get_mac_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Get MAC alert statistics.
@@ -1037,7 +1037,7 @@ def get_mac_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: s
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng network alert stats", description="Retrieve statistics for network alerts.")
+@mcp.tool(name="get_ntopng_network_alert_stats", description="Retrieve statistics for network alerts.")
 def get_network_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                             score: str, network_name: str) -> Dict[str, Any]:
     """
@@ -1072,7 +1072,7 @@ def get_network_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_i
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng observation points stats", description="Retrieve alert statistics for observation points.")
+@mcp.tool(name="get_ntopng_observation_points_stats", description="Retrieve alert statistics for observation points.")
 def get_observation_points_stats(ifid: int) -> Dict[str, Any]:
     """
     Get observation points alert statistics.
@@ -1092,7 +1092,7 @@ def get_observation_points_stats(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng snmp device alert list", description="Retrieve a list of SNMP device alerts.")
+@mcp.tool(name="get_ntopng_snmp_device_alert_list", description="Retrieve a list of SNMP device alerts.")
 def get_snmp_device_alert_list(ifid: int, start: int, length: int, epoch_begin: int, epoch_end: int, 
                                alert_id: str, severity: str, score: str, ip: str, snmp_interface: str, 
                                format: str) -> Dict[str, Any]:
@@ -1136,7 +1136,7 @@ def get_snmp_device_alert_list(ifid: int, start: int, length: int, epoch_begin: 
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng snmp device alert stats", description="Retrieve statistics for SNMP device alerts.")
+@mcp.tool(name="get_ntopng_snmp_device_alert_stats", description="Retrieve statistics for SNMP device alerts.")
 def get_snmp_device_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                                 score: str, ip: str, snmp_interface: str) -> Dict[str, Any]:
     """
@@ -1173,7 +1173,7 @@ def get_snmp_device_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, ale
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng snmp device alert timeseries", description="Retrieve timeseries data for SNMP device alerts.")
+@mcp.tool(name="get_ntopng_snmp_device_alert_timeseries", description="Retrieve timeseries data for SNMP device alerts.")
 def get_snmp_device_alert_timeseries(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                                      score: str, ip: str, snmp_interface: str) -> Dict[str, Any]:
     """
@@ -1210,7 +1210,7 @@ def get_snmp_device_alert_timeseries(ifid: int, epoch_begin: int, epoch_end: int
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng system alert stats", description="Retrieve statistics for system alerts.")
+@mcp.tool(name="get_ntopng_system_alert_stats", description="Retrieve statistics for system alerts.")
 def get_system_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Get system alert statistics.
@@ -1242,7 +1242,7 @@ def get_system_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="acknowledge ntopng active monitoring alerts", description="Acknowledge historical active monitoring alerts.")
+@mcp.tool(name="acknowledge_ntopng_active_monitoring_alerts", description="Acknowledge historical active monitoring alerts.")
 def acknowledge_am_host_alerts(ifid: int, label: str, alert_id: str, row_id: int, epoch_begin: int, epoch_end: int, 
                                severity: str, score: str) -> Dict[str, Any]:
     """
@@ -1279,7 +1279,7 @@ def acknowledge_am_host_alerts(ifid: int, label: str, alert_id: str, row_id: int
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="acknowledge ntopng flow alerts", description="Acknowledge historical flow alerts.")
+@mcp.tool(name="acknowledge_ntopng_flow_alerts", description="Acknowledge historical flow alerts.")
 def acknowledge_flow_alerts(ifid: int, label: str, alert_id: str, row_id: int, epoch_begin: int, epoch_end: int, 
                             severity: str, score: str, ip_version: str, ip: str, cli_ip: str, srv_ip: str, 
                             cli_name: str, srv_name: str, cli_port: str, srv_port: str, vlan_id: str, l7proto: str, 
@@ -1362,7 +1362,7 @@ def acknowledge_flow_alerts(ifid: int, label: str, alert_id: str, row_id: int, e
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng new devices", description="Delete all new devices learned by ntopng.")
+@mcp.tool(name="delete_ntopng_new_devices", description="Delete all new devices learned by ntopng.")
 def delete_new_devices() -> Dict[str, Any]:
     """
     Delete all new devices learned by ntopng.
@@ -1378,7 +1378,7 @@ def delete_new_devices() -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng interface alerts", description="Delete historical interface alerts.")
+@mcp.tool(name="delete_ntopng_interface_alerts", description="Delete historical interface alerts.")
 def delete_interface_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                             score: str, subtype: str) -> Dict[str, Any]:
     """
@@ -1413,7 +1413,7 @@ def delete_interface_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_i
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng mac alerts", description="Delete historical MAC alerts.")
+@mcp.tool(name="delete_ntopng_mac_alerts", description="Delete historical MAC alerts.")
 def delete_mac_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Delete historical MAC alerts.
@@ -1445,7 +1445,7 @@ def delete_mac_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng network alerts", description="Delete historical network alerts.")
+@mcp.tool(name="delete_ntopng_network_alerts", description="Delete historical network alerts.")
 def delete_network_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, 
                           score: str, network_name: str) -> Dict[str, Any]:
     """
@@ -1480,7 +1480,7 @@ def delete_network_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng system alerts", description="Delete historical system alerts.")
+@mcp.tool(name="delete_ntopng_system_alerts", description="Delete historical system alerts.")
 def delete_system_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Delete historical system alerts.
@@ -1513,7 +1513,7 @@ def delete_system_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: 
     return response.json()
 
 # --- Flows Section ---
-@mcp.tool(name="get ntopng clickhouse columns", description="Retrieve all available columns in the ntopng Clickhouse database.")
+@mcp.tool(name="get_ntopng_clickhouse_columns", description="Retrieve all available columns in the ntopng Clickhouse database.")
 def get_db_columns_info() -> Dict[str, Any]:
     """
     Retrieve all available columns in the Clickhouse flows database.
@@ -1529,7 +1529,7 @@ def get_db_columns_info() -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="query ntopng flows data", description="Retrieve detailed flows data from the ntopng flows database.")
+@mcp.tool(name="query_ntopng_flows_data", description="Retrieve detailed flows data from the ntopng flows database.")
 def get_flows_data(ifid: int, begin_time_clause: int, end_time_clause: int, select_clause: str = "*", 
                    where_clause: str = "", maxhits_clause: int = 10, order_by_clause: str = "", 
                    group_by_clause: str = "") -> Dict[str, Any]:
@@ -1567,7 +1567,7 @@ def get_flows_data(ifid: int, begin_time_clause: int, end_time_clause: int, sele
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng top-k flows", description="Retrieve top-k flows data from the ntopng flows database.")
+@mcp.tool(name="get_ntopng_top-k_flows", description="Retrieve top-k flows data from the ntopng flows database.")
 def get_topk_flows(ifid: int, begin_time_clause: int, end_time_clause: int, select_keys_clause: str = "IPV4_SRC_ADDR,IPV4_DST_ADDR,L7_PROTO", 
                    select_values_clause: str = "BYTES", where_clause: str = "", topk_clause: str = "SUM", 
                    approx_search: str = "true", maxhits_clause: int = 10) -> Dict[str, Any]:
@@ -1607,7 +1607,7 @@ def get_topk_flows(ifid: int, begin_time_clause: int, end_time_clause: int, sele
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng user alert stats", description="Retrieve statistics for user alerts.")
+@mcp.tool(name="get_ntopng_user_alert_stats", description="Retrieve statistics for user alerts.")
 def get_user_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Get user alert statistics.
@@ -1639,7 +1639,7 @@ def get_user_alert_stats(ifid: int, epoch_begin: int, epoch_end: int, alert_id: 
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng flow device stats", description="Retrieve statistics for a specific flow device.")
+@mcp.tool(name="get_ntopng_flow_device_stats", description="Retrieve statistics for a specific flow device.")
 def get_flow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
     """
     Get flow device statistics.
@@ -1665,7 +1665,7 @@ def get_flow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng flow devices stats", description="Retrieve statistics for all flow devices.")
+@mcp.tool(name="get_ntopng_flow_devices_stats", description="Retrieve statistics for all flow devices.")
 def get_flow_devices_stats(ifid: int) -> Dict[str, Any]:
     """
     Get flow devices statistics.
@@ -1685,7 +1685,7 @@ def get_flow_devices_stats(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng sflow device stats", description="Retrieve statistics for a specific sFlow device.")
+@mcp.tool(name="get_ntopng_sflow_device_stats", description="Retrieve statistics for a specific sFlow device.")
 def get_sflow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
     """
     Get sFlow device statistics.
@@ -1711,7 +1711,7 @@ def get_sflow_device_stats(ifid: int, ip: str, ifIdx: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="get ntopng sflow devices stats", description="Retrieve statistics for all sFlow devices.")
+@mcp.tool(name="get_ntopng_sflow_devices_stats", description="Retrieve statistics for all sFlow devices.")
 def get_sflow_devices_stats(ifid: int) -> Dict[str, Any]:
     """
     Get sFlow devices statistics.
@@ -1731,7 +1731,7 @@ def get_sflow_devices_stats(ifid: int) -> Dict[str, Any]:
     response.raise_for_status()
     return response.json()
 
-@mcp.tool(name="delete ntopng user alerts", description="Delete historical user alerts.")
+@mcp.tool(name="delete_ntopng_user_alerts", description="Delete historical user alerts.")
 def delete_user_alerts(ifid: int, epoch_begin: int, epoch_end: int, alert_id: str, severity: str, score: str) -> Dict[str, Any]:
     """
     Delete historical user alerts.
