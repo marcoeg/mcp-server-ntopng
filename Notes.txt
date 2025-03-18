@@ -64,4 +64,9 @@ This code includes all methods from the specified sections:
 - **Parameter Handling**: All parameters are included as per the spec, with optional ones given defaults where applicable.
 - **Completeness**: This covers all methods in the Hosts, Alerts, and Flows sections, excluding Users-related endpoints from Alerts.
 
-Let me know if you need further refinements or additional sections!
+
+================================
+
+get_hosts_location: does not return any results
+
+
