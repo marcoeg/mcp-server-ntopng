@@ -299,7 +299,7 @@ def query_ntopngdb(query: str):
 #    ntopng API
 ######################################################
 
-# Function to fetch all ifid values
+# Function to fetch all ifid values - validated
 @mcp.tool(name="fetch_ntopng_all_ifids", description="Retrieve all available interface IDs from ntopng.")
 def get_all_ifids() -> List[int]:
     """
@@ -322,7 +322,9 @@ def get_all_ifids() -> List[int]:
     ifid_list = [interface["ifid"] for interface in data["rsp"]]
     return ifid_list
 
-# --- Hosts Section ---
+# --- Hosts Section --- 
+#
+# Find hosts geographical locations -- not ok
 @mcp.tool(name="get_ntopng_hosts_location", description="Fetch geographical location and additional info for hosts.")
 def get_hosts_location(ifid: int) -> Dict[str, Any]:
     """

@@ -106,3 +106,32 @@ $ cd mcp_ntopng
 $ source .env
 $ CLIENT_PORT=8077 SERVER_PORT=8078  mcp dev main.py --with clickhouse-driver --with python-dotenv --with uvicorn --with pip-system-certs
 ```
+Use the local library in Claude Desktop.
+
+Find:  /Users/marco/Library/Application\ Support/Claude/claude_desktop_config.json 
+
+Edit the claude_desktop_config.json changing the local paths:
+```
+{
+    "mcpServers": {
+      "mcp-ntopng": {
+        "command": "/Users/marco/Development/claude/mcp-server-ntopng/.venv/bin/python",
+        "args": [
+           "/Users/marco/Development/claude/mcp-server-ntopng/run_mcp_ntopng.py"
+        ],
+        "env": {
+          "NTOPNG_HOST": "marcoeg-nod004.ntoplink.com",
+          "NTOPNG_DBPORT": "9000",
+          "NTOPNG_DBUSER": "default",
+          "NTOPNG_DBPASSWORD": "",
+          "NTOPNG_SECURE": "false",
+          "NTOPNG_VERIFY": "false",
+          "NTOPNG_CONNECT_TIMEOUT": "30",
+          "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
+          "SELECT_QUERY_TIMEOUT_SECS": "30",
+          "NTOPNG_API_KEY": "397ee4a3bcb03f25e3535214cba37834"
+        }
+      }
+    }
+  }
+  ```
