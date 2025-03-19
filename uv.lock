@@ -181,7 +181,7 @@ cli = [
 [[package]]
 name = "mcp-ntopng"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "clickhouse-driver" },
     { name = "mcp", extra = ["cli"] },
