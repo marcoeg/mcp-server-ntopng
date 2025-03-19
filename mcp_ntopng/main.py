@@ -1,4 +1,4 @@
-from mcp_server import mcp
+from mcp_ntopng.mcp_server import mcp
 
 def main():
     mcp.run()

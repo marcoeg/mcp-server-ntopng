@@ -1,0 +1,89 @@
+● To build and use your package with uv:
+
+  1. Build your package:
+  uv pip install build
+  python -m build
+
+  2. Install locally with uv:
+  uv pip install dist/mcp_ntopng-0.1.0-py3-none-any.whl
+
+  3. Configure Claude Desktop:
+    - Edit your configuration file:
+        - MacOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+      - Windows: %APPDATA%/Claude/claude_desktop_config.json
+  4. Add this configuration:
+  {
+    "mcpServers": {
+      "ntopng": {
+        "command": "uv",
+        "args": ["run", "mcp-ntopng"],
+        "env": {
+          "NTOPNG_HOST": "<ntopng-host>",
+          "NTOPNG_DBPORT": "<ntopng-dbport>",
+          "NTOPNG_DBUSER": "<ntopng-dbuser>",
+          "NTOPNG_DBPASSWORD": "<ntopng-dbpassword>",
+          "NTOPNG_SECURE": "true",
+          "NTOPNG_VERIFY": "true",
+          "NTOPNG_CONNECT_TIMEOUT": "30",
+          "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
+          "NTOPNG_API_KEY": "your-ntopng-token"
+        }
+      }
+    }
+  }
+
+  This configuration uses uv run to execute your package script. After restarting Claude Desktop, it should be able to use your ntopng MCP
+  server.
+
+
+==============================================
+
+● Plan for publishing mcp-ntopng as a package on PyPI:
+
+  1. Update Package Metadata
+    - Complete the missing items in the README.md:
+        - Fill in the empty bullet points in the "Works with Claude desktop app" section
+      - Update any outdated instructions
+  2. Prepare Package Files for PyPI
+    - Create a MANIFEST.in file to include non-Python files if needed
+    - Add README files with installation and usage instructions
+    - Create a proper entry point in main.py that correctly imports from mcp_ntopng.mcp_server
+    - Verify pyproject.toml has all necessary classifiers (fix "Intended Audience :: Analysts" to use proper trove classifier format)
+  3. Testing
+    - Test package installation locally using pip install -e .
+    - Test with different Python versions (verify 3.13 requirement)
+    - Verify all dependencies are correctly specified in pyproject.toml
+    - Test the package in isolated environments to ensure it works as expected
+  4. Documentation
+    - Add detailed documentation on supported MCP tools
+    - Complete tool descriptions in the README.md
+    - Document expected environment variables and configuration options
+    - Add examples of usage with Claude
+  5. PyPI Account and Publishing
+    - Create an account on PyPI if not already done
+    - Consider creating a test package on TestPyPI first
+    - Generate distribution packages:
+    python -m pip install --upgrade build
+  python -m build
+    - Upload to PyPI:
+    python -m pip install --upgrade twine
+  python -m twine upload dist/*
+  6. Post-Release
+    - Update the README.md to provide proper installation instructions via PyPI
+    - Update the "Configuration" section in README.md with the PyPI installation method
+    - Set up versioning strategy for future updates
+    - Consider adding GitHub Actions for automated testing and publishing
+  7. Security Considerations
+    - Review code to ensure no hardcoded credentials
+    - Validate that sensitive data is handled securely
+    - Ensure that API keys and credentials are properly managed via environment variables
+  8. Recommendations
+    - Add proper docstrings to all modules and functions
+    - Consider adding tests directory with unit/integration tests
+    - Add a CHANGELOG.md file to track version changes
+    - Add contribution guidelines if you expect community involvement
+
+  This package appears to implement an MCP (Model Context Protocol) Server for ntopng, allowing AI agents like Claude to query network
+  monitoring data using the ntopng database. The code looks solid but needs a few tweaks before being ready for PyPI publication.
+
+
