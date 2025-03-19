@@ -129,9 +129,41 @@ Edit the claude_desktop_config.json changing the local paths:
           "NTOPNG_CONNECT_TIMEOUT": "30",
           "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
           "SELECT_QUERY_TIMEOUT_SECS": "30",
-          "NTOPNG_API_KEY": "397ee4a3bcb03f25e3535214cba37834"
+          "NTOPNG_API_KEY": "API_KEY"
         }
       }
     }
   }
   ```
+
+## Making a package step 1: local install
+```
+uv sync
+uv build
+uv pip install dist/mcp_ntopng-0.1.0-py3-none-any.whl
+```
+
+claude_desktop_config.json
+```
+{
+    "mcpServers": {
+      "mcp-ntopng": {
+        "command": "/Users/marco/Development/claude/mcp-server-ntopng/.venv/bin/mcp-ntopng",
+        "args": [],
+        "env": {
+          "NTOPNG_HOST": "marcoeg-nod004.ntoplink.com",
+          "NTOPNG_DBPORT": "9000",
+          "NTOPNG_DBUSER": "default",
+          "NTOPNG_DBPASSWORD": "",
+          "NTOPNG_SECURE": "false",
+          "NTOPNG_VERIFY": "false",
+          "NTOPNG_CONNECT_TIMEOUT": "30",
+          "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
+          "SELECT_QUERY_TIMEOUT_SECS": "30",
+          "NTOPNG_API_KEY": "API_KEY"
+        }
+      }
+    }
+}
+
+```
