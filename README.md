@@ -9,12 +9,12 @@ This MCP Server assumes that `ntopng` is using ClickHouse to store historical fl
 
 Works with Claude desktop app. Implements the following MCP [tools](https://modelcontextprotocol.io/docs/concepts/tools):
 
-- 
-- 
+- list_tables_ntopng_database: List selected tables structure of the ntopng database.
+- query_ntopng_database: Query the ntopng Clickhouse database.
 
 No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/resources) or [prompts](https://modelcontextprotocol.io/docs/concepts/prompts) yet.
 
-## Configuration (NOT YET: only when the server is registered with PyPI)
+## Configuration
 
 1. Create or edit the Claude Desktop configuration file located at:
    - On macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
@@ -37,7 +37,6 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
         "NTOPNG_VERIFY": "true",
         "NTOPNG_CONNECT_TIMEOUT": "30",
         "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
-        "NTOPNG_API_KEY": "your-ntopng-token"
       }
     }
   }
@@ -50,7 +49,7 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
 4. Restart Claude Desktop to apply the changes.
 
 
-## Development (ONLY OPTION until the module is registered with PyPI)
+## Development 
 
 1. Set the environmental variables either in the `claude_desktop_config.json` file or in a `.env` file in the root of the repository.
 
@@ -135,35 +134,3 @@ Edit the claude_desktop_config.json changing the local paths:
     }
   }
   ```
-
-## Making a package step 1: local install
-```
-uv sync
-uv build
-uv pip install dist/mcp_ntopng-0.1.0-py3-none-any.whl
-```
-
-claude_desktop_config.json
-```
-{
-    "mcpServers": {
-      "mcp-ntopng": {
-        "command": "/Users/marco/Development/claude/mcp-server-ntopng/.venv/bin/mcp-ntopng",
-        "args": [],
-        "env": {
-          "NTOPNG_HOST": "marcoeg-nod004.ntoplink.com",
-          "NTOPNG_DBPORT": "9000",
-          "NTOPNG_DBUSER": "default",
-          "NTOPNG_DBPASSWORD": "",
-          "NTOPNG_SECURE": "false",
-          "NTOPNG_VERIFY": "false",
-          "NTOPNG_CONNECT_TIMEOUT": "30",
-          "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
-          "SELECT_QUERY_TIMEOUT_SECS": "30",
-          "NTOPNG_API_KEY": "API_KEY"
-        }
-      }
-    }
-}
-
-```

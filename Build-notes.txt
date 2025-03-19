@@ -40,50 +40,106 @@
 
 ● Plan for publishing mcp-ntopng as a package on PyPI:
 
-  1. Update Package Metadata
-    - Complete the missing items in the README.md:
-        - Fill in the empty bullet points in the "Works with Claude desktop app" section
-      - Update any outdated instructions
-  2. Prepare Package Files for PyPI
-    - Create a MANIFEST.in file to include non-Python files if needed
-    - Add README files with installation and usage instructions
-    - Create a proper entry point in main.py that correctly imports from mcp_ntopng.mcp_server
-    - Verify pyproject.toml has all necessary classifiers (fix "Intended Audience :: Analysts" to use proper trove classifier format)
-  3. Testing
-    - Test package installation locally using pip install -e .
-    - Test with different Python versions (verify 3.13 requirement)
-    - Verify all dependencies are correctly specified in pyproject.toml
-    - Test the package in isolated environments to ensure it works as expected
-  4. Documentation
-    - Add detailed documentation on supported MCP tools
-    - Complete tool descriptions in the README.md
-    - Document expected environment variables and configuration options
-    - Add examples of usage with Claude
-  5. PyPI Account and Publishing
-    - Create an account on PyPI if not already done
-    - Consider creating a test package on TestPyPI first
-    - Generate distribution packages:
-    python -m pip install --upgrade build
-  python -m build
-    - Upload to PyPI:
-    python -m pip install --upgrade twine
-  python -m twine upload dist/*
-  6. Post-Release
-    - Update the README.md to provide proper installation instructions via PyPI
-    - Update the "Configuration" section in README.md with the PyPI installation method
-    - Set up versioning strategy for future updates
-    - Consider adding GitHub Actions for automated testing and publishing
-  7. Security Considerations
-    - Review code to ensure no hardcoded credentials
-    - Validate that sensitive data is handled securely
-    - Ensure that API keys and credentials are properly managed via environment variables
-  8. Recommendations
-    - Add proper docstrings to all modules and functions
-    - Consider adding tests directory with unit/integration tests
-    - Add a CHANGELOG.md file to track version changes
-    - Add contribution guidelines if you expect community involvement
+Publishing your MCP Server package (`mcp-ntopng`) to **PyPI** is a great next step! You’ll be able to:
 
-  This package appears to implement an MCP (Model Context Protocol) Server for ntopng, allowing AI agents like Claude to query network
-  monitoring data using the ntopng database. The code looks solid but needs a few tweaks before being ready for PyPI publication.
+- `pip install mcp-ntopng`
+- Run it with `mcp-ntopng` directly from any terminal
+- Use it in Claude Desktop via a simple path to the installed script
 
+> Make sure to bump the release version to update an existing package.
 
+---
+
+## ✅ Step-by-Step: Publish to PyPI
+
+### 1. ✅ Clean up `pyproject.toml`
+
+Make sure it includes the essentials:
+
+```toml
+[project]
+name = "mcp-ntopng"                     # Must match the name you'll use on PyPI
+version = "0.1.0"
+description = "MCP server for ntopng integration"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+  "clickhouse-driver>=0.2.5",
+  "mcp[cli]>=1.3.0",
+  "requests>=2.32.3",
+  "python-dotenv>=1.0.1",
+  "pip-system-certs>=4.0"
+]
+
+[project.scripts]
+mcp-ntopng = "mcp_ntopng.main:main"     # 👈 this makes the CLI available
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+```
+
+---
+
+### 2. ✅ Register on PyPI
+
+- Go to: https://pypi.org/account/register/
+- Create an account if you haven’t already
+- Save your **username** and **password / token**
+
+---
+
+### 3. ✅ Build the package
+
+```bash
+uv build
+```
+
+(or use `python -m build` if using standard tooling)
+
+---
+
+### 4. ✅ Upload to PyPI
+
+First, install Twine:
+
+```bash
+uv pip install twine
+```
+
+Then upload:
+
+```bash
+twine upload dist/*
+```
+
+It will prompt for your username and password/token.
+
+> 🔐 You can also use an [API token](https://pypi.org/help/#apitoken) instead of password for more security.
+
+---
+
+### 5. ✅ Test the package
+
+From a clean environment or container:
+
+```bash
+pip install mcp-ntopng
+mcp-ntopng  # 🎉 should just work!
+```
+
+---
+
+## 🛠 Bonus: Private PyPI or GitHub Releases?
+
+If you don’t want to publish publicly:
+- Use a **private PyPI index** (e.g. Artifactory, Cloudsmith)
+- Or publish the `.whl` as a **GitHub Release** and let users `pip install` from a GitHub URL:
+  ```bash
+  pip install https://github.com/your-org/mcp-ntopng/releases/download/v0.1.0/mcp_ntopng-0.1.0-py3-none-any.whl
+  ```
+
+------------------------------------------------------------------------
