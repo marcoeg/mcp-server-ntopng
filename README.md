@@ -27,7 +27,7 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
   "mcpServers": {
     "mcp-ntopng": {
       "command": "/path/to/your/uv-binary",
-      "args": ["run", "--with mcp-ntopng --python","3.13","mcp-ntopng"]
+      "args": ["run", "--with", "mcp-ntopng", "--python", "3.13", "mcp-ntopng"]
       "env": {
         "NTOPNG_HOST": "<ntopng-host>",
         "NTOPNG_DBPORT": "<ntopng-dbport>",
