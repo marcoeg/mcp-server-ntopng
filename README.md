@@ -1,4 +1,4 @@
-# mcp-server-NTOPNG
+# mcp-server-ntopng
 NTOPNG Model Context Protocol Server
 
 A [Model Context Protocol](https://modelcontextprotocol.io/) server implementation for [NTOPNG](https://www.ntop.org/products/traffic-analysis/ntop/) that enables AI agents to query networks monitoring data using the NTOPNG database.
@@ -7,14 +7,14 @@ This MCP Server assumes that `ntopng` is using ClickHouse to store historical fl
 
 ## Status
 
-Works with Claude desktop app. Implements the following MCP [tools](https://modelcontextprotocol.io/docs/concepts/tools):
+Works with Claude Desktop app and other MCP compliant hosts and clients. Implements the following MCP [tools](https://modelcontextprotocol.io/docs/concepts/tools):
 
-- 
-- 
+- list_tables_ntopng_database: List selected tables structure of the ntopng database.
+- query_ntopng_database: Query the ntopng Clickhouse database.
 
 No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/resources) or [prompts](https://modelcontextprotocol.io/docs/concepts/prompts) yet.
 
-## Configuration (NOT YET: only when the server is registered with PyPI)
+## Configuration
 
 1. Create or edit the Claude Desktop configuration file located at:
    - On macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
@@ -37,7 +37,7 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
         "NTOPNG_VERIFY": "true",
         "NTOPNG_CONNECT_TIMEOUT": "30",
         "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
-        "NTOPNG_API_KEY": "your-ntopng-token"
+        "NTOPNG_API_KEY": "NTOPNG_TOKEN"
       }
     }
   }
@@ -50,7 +50,7 @@ No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/res
 4. Restart Claude Desktop to apply the changes.
 
 
-## Development (ONLY OPTION until the module is registered with PyPI)
+## Development 
 
 1. Set the environmental variables either in the `claude_desktop_config.json` file or in a `.env` file in the root of the repository.
 
@@ -129,7 +129,7 @@ Edit the claude_desktop_config.json changing the local paths:
           "NTOPNG_CONNECT_TIMEOUT": "30",
           "NTOPNG_SEND_RECEIVE_TIMEOUT": "300",
           "SELECT_QUERY_TIMEOUT_SECS": "30",
-          "NTOPNG_API_KEY": "397ee4a3bcb03f25e3535214cba37834"
+          "NTOPNG_API_KEY": "NTOPNG_TOKEN"
         }
       }
     }
