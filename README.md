@@ -1,5 +1,6 @@
 # mcp-server-ntopng
 [![PyPI - Version](https://img.shields.io/pypi/v/mcp-ntopng)](https://pypi.org/project/mcp-ntopng)
+
 NTOPNG Model Context Protocol Server
 
 <a href="https://glama.ai/mcp/servers/@marcoeg/mcp-server-ntopng">
