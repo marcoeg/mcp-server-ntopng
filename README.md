@@ -1,5 +1,9 @@
 # mcp-server-ntopng
+[![PyPI - Version](https://img.shields.io/pypi/v/mcp-ntopng)](https://pypi.org/project/mcp-ntopng)
 NTOPNG Model Context Protocol Server
+
+<a href="https://glama.ai/mcp/servers/@marcoeg/mcp-server-ntopng">
+<img width="380" height="200" src="https://glama.ai/mcp/servers/@marcoeg/mcp-server-ntopng/badge" />
 
 A [Model Context Protocol](https://modelcontextprotocol.io/) server implementation for [NTOPNG](https://www.ntop.org/products/traffic-analysis/ntop/) that enables AI agents to query networks monitoring data using the NTOPNG database.
 
