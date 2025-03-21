@@ -123,6 +123,8 @@ The following environment variables are used to configure the database connectio
 * `NTOPNG_HOST`: The hostname of the `ntopng` server
 * `NTOPNG_DBUSER`: The username for Clickhouse DB authentication
 * `NTOPNG_DBPASSWORD`: The password for Clickhouse DB authentication
+* `NTOPNG_API_KEY`: The `ntopng` authentication token.
+
 #### Optional
 * `NTOPNG_DBPORT`: The port number of the Clickhouse DB in the  `ntopng` server
   - Default: `9000` if HTTPS is enabled, `8123` if disabled
