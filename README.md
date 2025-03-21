@@ -10,6 +10,50 @@ A [Model Context Protocol](https://modelcontextprotocol.io/) server implementati
 
 This MCP Server assumes that `ntopng` is using ClickHouse to store historical flows and alert. Check [ntopng Clickhouse](https://www.ntop.org/guides/ntopng/flow_dump/clickhouse/index.html)
 
+
+## Tools
+
+* `fetch_ntopng_all_ifids`
+- Retrieve all available interface IDs from ntopng.
+* `get_ntopng_hosts_location`
+- Fetch geographical location and additional info for hosts.
+* `fetch_ntopng_top_local_talkers`
+- Retrieve the top 10 local talkers for a specified interface.
+* `fetch_ntopng_top_remote_talkers`
+- Retrieve the top 10 remote talkers for a specified interface.
+* `get_ntopng_all_alert_stats`
+- Retrieve statistics for all alerts.
+* `get_ntopng_flow_alert_stats`
+- Retrieve statistics for flow alerts.
+* `get_ntopng_host_alert_stats`
+- Retrieve statistics for host alerts.
+* `get_ntopng_interface_alert_stats`
+- Retrieve statistics for interface alerts.
+* `get_ntopng_mac_alert_stats`
+- Retrieve statistics for MAC alerts.
+* `get_ntopng_network_alert_stats`
+- Retrieve statistics for network alerts.
+* `get_ntopng_snmp_device_alert_list`
+- Retrieve a list of SNMP device alerts.
+* `get_ntopng_snmp_device_alert_stats`
+- Retrieve statistics for SNMP device alerts.
+* `get_ntopng_system_alert_stats`
+- Retrieve statistics for system alerts.
+* `query_ntopng_flows_data`
+- Retrieve detailed flows data from the ntopng flows database.
+* `get_ntopng_top-k_flows`
+- Retrieve top-k flows data from the ntopng flows database.
+* `get_ntopng_user_alert_stats`
+- Retrieve statistics for user alerts.
+* `get_ntopng_flow_devices_stats`
+- Retrieve statistics for all flow dev`ices.
+* `get_ntopng_sflow_devices_stats`
+- Retrieve statistics for all sFlow devices.
+* `list_tables_ntopng_database`
+- List tables structure of the ntopng database.
+* `query_ntopng_database`
+- Query the ntopng Clickhouse database.
+
 ## Status
 
 Works with Claude Desktop app and other MCP compliant hosts and clients. Implements the following MCP [tools](https://modelcontextprotocol.io/docs/concepts/tools):
