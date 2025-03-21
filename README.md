@@ -56,10 +56,7 @@ This MCP Server assumes that `ntopng` is using ClickHouse to store historical fl
 
 ## Status
 
-Works with Claude Desktop app and other MCP compliant hosts and clients. Implements the following MCP [tools](https://modelcontextprotocol.io/docs/concepts/tools):
-
-- list_tables_ntopng_database: List selected tables structure of the ntopng database.
-- query_ntopng_database: Query the ntopng Clickhouse database.
+Works with Claude Desktop app and other MCP compliant hosts and clients. 
 
 No support for MCP [resources](https://modelcontextprotocol.io/docs/concepts/resources) or [prompts](https://modelcontextprotocol.io/docs/concepts/prompts) yet.
 
